@@ -23,7 +23,6 @@ function EventDetails() {
         setTotalCost(parseFloat(data.totalCost) || 0);
       } else {
         console.log("No such document!");
-        // Configure um estado de fallback se o evento não existir
         setEvent({ guests: [] });
       }
     };
@@ -31,11 +30,17 @@ function EventDetails() {
     fetchEvent();
   }, [eventId]);
 
-  // Certifique-se de que `event` e `event.guests` são verificados para nulidade
-  const totalPaid = event && Array.isArray(event.guests)
-    ? event.guests.reduce((acc, guest) => acc + parseFloat(guest.amountPaid), 0)
-    : 0;
+  // Definição da função handleTotalCostChange
+  const handleTotalCostChange = (e) => {
+    const cost = parseFloat(e.target.value) || 0;
+    setTotalCost(cost);
+    const eventDoc = doc(db, "events", eventId);
+    updateDoc(eventDoc, { totalCost: cost });
+  };
+
+  const totalPaid = event.guests.reduce((acc, guest) => acc + parseFloat(guest.amountPaid), 0);
   const profitOrLoss = totalPaid - totalCost;
+
   const addGuest = async () => {
     if (isOwner && guestName && amountPaid) {
       const newGuest = {
