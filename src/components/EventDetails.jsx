@@ -106,7 +106,7 @@ function EventDetails() {
                    className="form-checkbox h-5 w-5 text-blue-600" /><span className="ml-2 text-gray-700">Paid</span>
           </label>
           <button className="ml-2 py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-700 transition duration-300"
-                  onClick={addGuest}>Add Guest</button>
+                  onClick={() => addGuest()}>Add Guest</button>
         </div>
         <div className="mb-4">
           <label className="font-semibold">Total Event Cost: </label>
