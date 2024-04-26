@@ -17,10 +17,10 @@ function EventDetails() {
       const eventDoc = doc(db, "events", eventId);
       const eventData = await getDoc(eventDoc);
       if (eventData.exists()) {
-        setEvent(eventData.data());
-        setIsOwner(eventData.data().userId === auth.currentUser.uid);
-        // Garantir que o totalCost é um número ao carregar
-        setTotalCost(parseFloat(eventData.data().totalCost) || 0);
+        const data = eventData.data();
+        setEvent({ ...data, guests: data.guests || [] }); // Garantir que guests é um array
+        setIsOwner(data.userId === auth.currentUser.uid);
+        setTotalCost(parseFloat(data.totalCost) || 0);
       } else {
         console.log("No such document!");
       }
@@ -30,14 +30,15 @@ function EventDetails() {
   }, [eventId]);
 
   const handleTotalCostChange = (e) => {
-    const cost = parseFloat(e.target.value) || 0; // Converter para float ou zero se inválido
+    const cost = parseFloat(e.target.value) || 0;
     setTotalCost(cost);
     const eventDoc = doc(db, "events", eventId);
     updateDoc(eventDoc, { totalCost: cost });
   };
 
-  const totalPaid = event ? event.guests.reduce((acc, guest) => acc + parseFloat(guest.amountPaid), 0) : 0;
+  const totalPaid = event.guests.reduce((acc, guest) => acc + parseFloat(guest.amountPaid), 0);
   const profitOrLoss = totalPaid - totalCost;
+
 
   const addGuest = async () => {
     if (isOwner && guestName && amountPaid) {
