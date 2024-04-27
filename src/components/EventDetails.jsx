@@ -17,7 +17,6 @@ function EventDetails() {
   useEffect(() => {
     const fetchEvent = async () => {
       setLoading(true);
-      setError('');
       try {
         const eventDoc = doc(db, "events", eventId);
         const eventData = await getDoc(eventDoc);
@@ -27,12 +26,11 @@ function EventDetails() {
           setIsOwner(data.userId === auth.currentUser.uid);
           setTotalCost(parseFloat(data.totalCost) || 0);
         } else {
-          setError("No such document!");
+          console.log("No such document!");
           setEvent({ guests: [] });
         }
       } catch (error) {
         console.error("Error fetching event:", error);
-        setError("Failed to load event details.");
       } finally {
         setLoading(false);
       }
@@ -41,12 +39,16 @@ function EventDetails() {
     fetchEvent();
   }, [eventId]);
 
+  // Assegure-se que totalPaid é calculado dentro do componente e antes de ser usado
+  const totalPaid = event.guests.reduce((acc, guest) => acc + parseFloat(guest.amountPaid), 0);
+
   const handleTotalCostChange = (e) => {
     const cost = parseFloat(e.target.value) || 0;
     setTotalCost(cost);
     const eventDoc = doc(db, "events", eventId);
     updateDoc(eventDoc, { totalCost: cost });
   };
+
 
   const addGuest = async () => {
     if (isOwner && guestName && amountPaid) {
