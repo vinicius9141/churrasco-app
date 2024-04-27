@@ -39,8 +39,9 @@ function EventDetails() {
     fetchEvent();
   }, [eventId]);
 
-  // Assegure-se que totalPaid é calculado dentro do componente e antes de ser usado
+  // Calcular o total pago e o lucro/prejuízo
   const totalPaid = event.guests.reduce((acc, guest) => acc + parseFloat(guest.amountPaid), 0);
+  const profitOrLoss = totalPaid - totalCost;  // Certifique-se que esta linha está aqui, logo após totalPaid
 
   const handleTotalCostChange = (e) => {
     const cost = parseFloat(e.target.value) || 0;
