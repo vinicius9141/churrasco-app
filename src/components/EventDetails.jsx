@@ -134,6 +134,16 @@ function EventDetails() {
                   Adicionar Convidado
                 </button>
               </div>
+              <div className="mb-4">
+                <label className="font-semibold">Custo Total do Evento:</label>
+                <input
+                  type="number"
+                  className="border border-gray-300 p-2 rounded"
+                  value={totalCost}
+                  onChange={handleTotalCostChange}
+                  placeholder="Custo Total"
+                />
+              </div>
               <div>
                 {event.guests.map((guest, index) => (
                   <div key={index} className="bg-white shadow rounded p-3 my-2 flex justify-between items-center">
